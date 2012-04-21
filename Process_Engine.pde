@@ -1,3 +1,7 @@
+/* TODO:
+*    Add Load Tank action
+*/
+
 /* ---------------------------------------------------------------------------- */
 class Phase {
   int time;
@@ -30,16 +34,27 @@ class Phase {
     return -1;
   }
   
-  void exec() {
-    return;
-  }
-  
   Phase end() {
     process.goToNextStep();
     
     switch(process.getStep()) {
       case 'c':
         return new Continuous(process.getTime(), process.getNextStep(), process);
+      case 'i':
+        return new InvertOnce(process.getTime(), process.getNextStep(), process);
+      default:
+        return null;
+    }
+  }
+  
+  Phase end(char current) {
+    process.goToNextStep();
+    
+    switch(process.getStep()) {
+      case 'c':
+        return new Continuous(process.getTime(), process.getNextStep(), process);
+      case 'i':
+        return new InvertOnce(process.getTime(), process.getNextStep(), current, process);
       default:
         return null;
     }
@@ -66,10 +81,6 @@ class Continuous extends Phase {
     super(time, next, process);
   }
   
-  Continuous(int time, char next, char current, Process process) {
-    super(time, next, process);
-  }
-  
   void load() {
     action = 'c';
     if (nextStep == 'c' && nextStep == 'w' )
@@ -87,6 +98,87 @@ class Continuous extends Phase {
     if (timeLeft < 0) timeLeft = 0;
     
     return timeLeft;
+  }
+  
+  
+  
+}
+
+/* ---------------------------------------------------------------------------- */
+class InvertOnce extends Phase {
+  long endTime;
+  
+  InvertOnce(int time, char next) {
+    super(time, next, process);
+  }
+  
+  InvertOnce(int time, char next, char current, Process process) {
+    super(time, next, current, process);
+  }
+  
+  
+  void load() {
+    action = ' ';
+    next = 'i';
+    
+    endTime = millis() + time*1000;
+  }
+  
+  int getTime() {
+    int timeLeft = 0;
+    
+    timeLeft = int(endTime-millis())/1000;
+    if (timeLeft < 0) timeLeft = 0;
+    
+    return timeLeft;
+  }
+  
+  Phase end() {
+    super.end('i');
+  }
+  
+  void onButton() {
+    action = ' ';
+  }
+  
+}
+
+/* ---------------------------------------------------------------------------- */
+class Drain extends Phase {
+  long endTime;
+  
+  Drain(int time, char next) {
+    super(time, next, process);
+  }
+  
+  Drain(int time, char next, char current, Process process) {
+    super(time, next, current, process);
+  }
+  
+  void load() {
+    action = ' ';
+    next = 'd';
+    
+    endTime = millis() + time*1000;
+  }
+  
+  int getTime() {
+    int timeLeft = 0;
+    
+    timeLeft = int(endTime-millis())/1000;
+    if (timeLeft < 0) timeLeft = 0;
+    
+    return timeLeft;
+  }
+  
+  Phase end() {
+    action = 'd';
+    next = process.getNextAction();
+  }
+  
+  void onButton() {
+    if (action == 'd')
+      super.end();
   }
   
 }

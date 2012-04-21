@@ -4,24 +4,8 @@
  * by João Sousa. 
  * 
  * 
- * 0.1 Created 4 April 2012.
- *    - Works :o
- *
- * 0.2 19 April 2012
- *    - New (much sleeker) GUI
- *    - DS18B20 Temperature Sensor basic support
- *    - Improved everything: new FileIO parser and reader, cleaner process engine, etc.
- *    - Fixed a whole lotta bugs.
- *
- * 0.3 20 April 2012
- *    - Refined GUI (improved consistency of the style, added buttons, temperature bar,
- *                   progress bars and changed font to Geo Sans Light)
- *    - GUI code cleanup and improvement
- *    - added FileIO loadProcess()
- *
- */
 
-/*TODO:
+TODO:
     !!Fazer som quando disparam alarmes!!
 
 Verificar se os códigos de step são válidos quando se está a ler o ficheiro logo

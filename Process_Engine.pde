@@ -1,5 +1,5 @@
 /* TODO:
-*    Add Load Tank action
+*    Add Load Tank phase
 */
 
 /* ---------------------------------------------------------------------------- */
@@ -9,6 +9,14 @@ class Phase {
   char action;
   char next;
   Process process;
+  
+  Phase(Process process) {
+    this.time = 0;
+    this.nextStep = process.getNextStep();
+    this.action = 's';
+    this.next = nextStep;
+    this.process = process;
+  }
   
   Phase(int time, char next, Process process) {
     this.time = time;
@@ -27,6 +35,8 @@ class Phase {
   }
   
   void load() {
+    action = 's';
+    next = process.getNextStep();
     return;
   }
   
@@ -39,13 +49,13 @@ class Phase {
     
     switch(process.getStep()) {
       case 'c':
-        return new Continuous (process.getTime(), process.getNextStep(), process);
+        return new Continuous (process.getStepTime(), process.getNextStep(), process);
       case 'i':
-        return new InvertOnce (process.getTime(), process.getNextStep(), process);
+        return new InvertOnce (process.getStepTime(), process.getNextStep(), process);
       case 'd':
-        return new Drain (process.getTime(), process.getNextStep(), process);
+        return new Drain (process.getStepTime(), process.getNextStep(), process);
       case 'w':
-        return new WaterChange (process.getTime(), process.getNextStep(), process);
+        return new WaterChange (process.getStepTime(), process.getNextStep(), process);
       default:
         return null;
     }
@@ -56,13 +66,13 @@ class Phase {
     
     switch(process.getStep()) {
       case 'c':
-        return new Continuous(process.getTime(), process.getNextStep(), process);
+        return new Continuous(process.getStepTime(), process.getNextStep(), process);
       case 'i':
-        return new InvertOnce(process.getTime(), process.getNextStep(), current, process);
+        return new InvertOnce(process.getStepTime(), process.getNextStep(), current, process);
       case 'd':
-        return new Drain (process.getTime(), process.getNextStep(), current, process);
+        return new Drain (process.getStepTime(), process.getNextStep(), current, process);
       case 'w':
-        return new WaterChange (process.getTime(), process.getNextStep(), process);
+        return new WaterChange (process.getStepTime(), process.getNextStep(), process);
       default:
         return null;
     }
@@ -85,7 +95,7 @@ class Phase {
 class Continuous extends Phase {
   long endTime;
   
-  Continuous(int time, char next) {
+  Continuous(int time, char next, Process process) {
     super(time, next, process);
   }
   
@@ -113,7 +123,7 @@ class Continuous extends Phase {
 class InvertOnce extends Phase {
   long endTime;
   
-  InvertOnce(int time, char next) {
+  InvertOnce(int time, char next, Process process) {
     super(time, next, process);
   }
   
@@ -139,7 +149,7 @@ class InvertOnce extends Phase {
   }
   
   Phase end() {
-    super.end('i');
+    return super.end('i');
   }
   
   void onButton() {
@@ -151,8 +161,9 @@ class InvertOnce extends Phase {
 /* ---------------------------------------------------------------------------- */
 class Drain extends Phase {
   long endTime;
+  int timeLeft;
   
-  Drain(int time, char next) {
+  Drain(int time, char next, Process process) {
     super(time, next, process);
   }
   
@@ -169,7 +180,7 @@ class Drain extends Phase {
   
   int getTime() {
     
-    if (alarm == 'd')
+    if (action == 'd')
       return -1;
     else {
       int timeLeft = 0;
@@ -177,39 +188,47 @@ class Drain extends Phase {
       timeLeft = int(endTime-millis())/1000;
       if (timeLeft < 0) timeLeft = 0;
       
+      if (timeLeft == 0 && action != 'd') {
+        timeLeft = -1;
+        action = 'd';
+        next = nextStep;
+      }
+      
       return timeLeft;
     }
   }
   
-  Phase end() {
-    action = 'd';
-    next = nextStep;
-  }
-  
   void onButton() {
-    if (action == 'd')
-      super.end();
+    if (timeLeft == -1)
+      timeLeft = 0;
   }
   
+  Phase end() {
+    process.goToNextPhase();
+    return super.end();
+  }
 }
 
 /* ---------------------------------------------------------------------------- */
 class WaterChange extends Phase {
-  long endTime;
+  int state;
   
-  WaterChange(int time, char next) {
+  WaterChange(int time, char next, Process process) {
     super(time, next, process);
   }
   
   void load() {
     action = 'w';
     next = nextStep;
-    
-    endTime = millis() + time*1000;
+    state = -1;
   }
   
   void onButton() {
-      super.end();
+      state = 0;
+  }
+  
+  int getTime() {
+    return state;
   }
   
 }

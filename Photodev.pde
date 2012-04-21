@@ -13,6 +13,9 @@ Verificar se os códigos de step são válidos quando se está a ler o ficheiro 
 
 import processing.serial.*;
 
+Phase currentPhase;
+Process currentProcess;
+
 //Process data
 float[][] tempData = new float[255][2];
 int[][] timeData = new int[1024][2];  //[time in seconds][number of repetitions]
@@ -43,9 +46,6 @@ void setup() {
   frame.setBackground(new java.awt.Color(0, 0, 0));
   
   frameRate(4);
-  
-  //Initialize the alarms
-  setAlarm('s');
   
   //Initialize the GUI
   setupGUI();
@@ -126,6 +126,7 @@ void keyPressed() {
   clearAlarm('d');
   if (operation == -1)
     go = 1;
+  //curentPhase.onButton;
   draw();
 }
 
@@ -212,4 +213,17 @@ int loadNextStep() {
       } 
       
       return 1;
+}
+
+/* ---------------------------------------------------------------------------- */
+int processEngine() {
+  int time = currentPhase.getTime();
+  
+  if (time == 0)
+    currentPhase.end();
+  
+  updateTemps();
+  drawGUI();
+  
+  return 0;
 }

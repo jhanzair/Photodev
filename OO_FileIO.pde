@@ -22,8 +22,8 @@ class Process {
     nPhases = 0;
     nSteps = 0;
     phaseSteps = new int[255];
-    step = 0;
-    phase = -1;
+    step = -1;
+    phase = 0;
 
     //Obtain the process data
     String processPath = selectInput();
@@ -124,7 +124,10 @@ class Process {
   }
   
   String getPhase() {
-    return phases[phase];
+    if (step == -1)
+      return "Initial Setup";
+    else
+      return phases[phase];
   }
   
   float[] getProcessStatus() {
@@ -179,14 +182,14 @@ class Process {
   }
   
   char getNextStep() {
-    if (timeData[step][1] > 1)
+    if (timeData[step][1] > 1 && step != -1)
       return stepData[step];
     else
       return stepData[step+1];
   }
   
   void goToNextStep() {
-    if (timeData[step][1] > 1) {
+    if (timeData[step][1] > 1 && step != -1) {
         timeData[step][1]--;
       } else
         step++;
@@ -199,6 +202,14 @@ class Process {
       return -1;
     else
       return 1;
+  }
+  
+  float getTemperature() {
+    return tempData[phase][0];
+  }
+  
+  float getTolerance() {
+    return tempData[phase][1];
   }
 }
 

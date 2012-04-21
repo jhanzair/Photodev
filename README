@@ -5,21 +5,25 @@ Completely written in Processing (processing.org)
 Changelog:
 
  0.1 Created 4 April 2012.
-    - Works :o
+    	- Works :o
  
  0.2 19 April 2012
-    - New (much sleeker) GUI
-    - DS18B20 Temperature Sensor basic support
-    - Improved everything: new FileIO parser and reader, cleaner process engine, etc.
-    - Fixed a whole lotta bugs.
+    	- New (much sleeker) GUI
+    	- Temperature Sensor basic support
+    	- Improved everything: new FileIO parser and reader, cleaner process engine, etc.
+    	- Fixed a whole lotta bugs.
 
  0.3 20 April 2012
-    - Refined GUI (improved consistency of the style, added buttons, temperature bar,
+	- Killed the capital D in the name - it's Photodev now.
+    	- Refined GUI (improved consistency of the style, added buttons, temperature bar,
                    progress bars and changed font to Geo Sans Light)
-    - GUI code cleanup and improvement
-    - added FileIO loadProcess()
+    	- GUI code cleanup and improvement
+	- Refined temperature sensor support and graphical output
+    	- added FileIO loadProcess()
 
-
+ 0.4 21 April 2012
+	- Major rewrite of the whole code to implement a new object-oriented Process Engine (File_IO was 89% rewritten and Photodev was 81% rewritten :o)
+	- Kill a lot of bugs and introduced a bug where the progress bars don't update correctly. Will be corrected soon.
 
 
 jhanzair, 2012

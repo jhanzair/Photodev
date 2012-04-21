@@ -1,9 +1,9 @@
 /**
  * PhotoDev 0.4
  * Photo development controller 
- * by João Sousa. 
+ * by João Sousa aka jhanzair
  * 
- * 
+ * *
 
 TODO:
     !!Fazer som quando disparam alarmes!!

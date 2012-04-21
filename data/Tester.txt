@@ -1,0 +1,25 @@
+# Testing process
+# All times must be in seconds, and temperatures in centigrade degrees.
+#
+# Phase
+# Temperature(ºC)   Temperature tolerance(ºC)
+# Time (s)	Action, number of repetitions
+#
+
+#Pre-Wash
+#39	3
+#2	continuous, 1
+#2	invert, 1
+#2	invert, 1
+# 2	drain, 1
+
+#Developer
+#37.8	0.3
+#2	continuous, 1
+#3	invert, 1
+#3	drain, 1
+
+Wash
+38	5
+2	continuous, 1
+0	water change, 1

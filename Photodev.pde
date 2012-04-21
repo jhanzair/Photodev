@@ -1,5 +1,5 @@
 /**
- * PhotoDev 0.4
+ * PhotoDev 0.5
  * Photo development controller
  * 
  * *

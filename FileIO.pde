@@ -34,7 +34,7 @@ class Process {
       validProcess = -1;
     else
       validProcess = 1;
-      
+    
     processStatus = new float[nPhases+1];
     for (int i = 0; i <= nPhases; i++)
       processStatus[i] = 0;
@@ -57,6 +57,7 @@ class Process {
     String[] readBuffer = new String[2];
     String line;
     int lastPhase = 0;
+    int phaseTotalTime;
     
     for (int i = 0; i < 255; i++)
       phaseSteps[i] = 0;
@@ -116,6 +117,8 @@ class Process {
     phaseSteps[positionPhase-1] = positionStep;
     for (int i = nPhases-1; i > 0; i--)
       phaseSteps[i] = phaseSteps[i] - phaseSteps[i-1];
+      
+    
     
     return positionPhase;
   }
@@ -132,34 +135,27 @@ class Process {
       return phases[phase];
   }
   
+  String[] getPhaseList() {
+    return phases;
+  }
+  
   float[] getProcessStatus() {
     int timeElapsed = 0;
     int stepsDone = step;
     
     for (int i = 0; i < nPhases; i++) {
       if (phase > i)
-        processStatus[i] = 1;
+        processStatus[i] = 1.1;
       else if (phase == i)
-        processStatus[i] = getPhaseTimeRemaining()/getPhaseTotalTime();
+        processStatus[i] = (processTimes[i]-getPhaseTimeRemaining())/processTimes[i];
       else
         processStatus[i] = 0;
     }
-    
+
+    processStatus[nPhases] = float(step)/float(nSteps);
     return processStatus;
   }
   
-  float getPhaseTotalTime() {
-    int stepsUntilPhase = 0;
-    int phaseTotalTime = 0;
-    
-    for (int i = 0; i < phase; i++)
-      stepsUntilPhase += phaseSteps[i];
-    
-    for (int i = stepsUntilPhase; i < (stepsUntilPhase + phaseSteps[phase]); i++)
-      phaseTotalTime += timeData[i][0]*timeData[i][1];
-    
-    return float(phaseTotalTime);
-  }
   
   float getPhaseTimeRemaining () {
     int stepsUntilPhase = 0;
@@ -167,8 +163,6 @@ class Process {
     
     for (int i = 0; i < phase; i++)
       stepsUntilPhase += phaseSteps[i];
-      
-    stepsUntilPhase--;
     
     for (int i = stepsUntilPhase; i < stepsUntilPhase + phaseSteps[phase]; i++)
       if (step <= i)
@@ -192,10 +186,8 @@ class Process {
     if (timeData[step][1] > 1) {
         timeData[step][1]--;
       } else if (state == 0) {
-          println("process ready");
           state = 1;
       } else {
-          println("step++");
           step++;
       }
   }

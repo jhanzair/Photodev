@@ -94,17 +94,19 @@ void drawGUI() {
 /* ---------------------------------------------------------------------------- */
 void drawpgbars() {
   float[] processStatus = currentProcess.getProcessStatus();
+  String[] phaseList = currentProcess.getPhaseList();
   
   textAlign(RIGHT);
   fill(225);
   textFont(geo20, 20);
   
-  for (int i = 0; i < (processStatus.length-1); i++)
+  for (int i = 0; i < (processStatus.length-1); i++) {
+    text(phaseList[i], 780, 177+50*i); 
     drawBar(processStatus[i], i);
+  }
   
   text("Total", 780, 177-60);  
   drawBar(processStatus[processStatus.length-1], -1.2);
-      
   textAlign(LEFT);
 }
 
@@ -130,10 +132,10 @@ void drawBar(float phasePercent, float position) {
       image(pgbar80, 650, 120+50*position);
     else if  (phasePercent < 1)
       image(pgbar90, 650, 120+50*position);
-    else if  (phasePercent == 1)
-      image(pgbgreen, 650, 120+50*position);
-    else
+    else if  (phasePercent == 1.0)
       image(pgbar100, 650, 120+50*position);
+    else
+      image(pgbgreen, 650, 120+50*position);
 }
 
 /* ---------------------------------------------------------------------------- */

@@ -1,7 +1,6 @@
 /**
  * PhotoDev 0.4
- * Photo development controller 
- * by João Sousa aka jhanzair
+ * Photo development controller
  * 
  * *
 
@@ -42,7 +41,10 @@ void draw() {
     
     if (time == 0) {
       currentPhase = currentPhase.end();
-      currentPhase.load();
+      if (currentPhase != null)
+        currentPhase.load();
+      else
+        loadStatus = 0;
     }
   }
   drawGUI();
@@ -68,5 +70,6 @@ void mouseReleased() {
 }
 
 void keyPressed() {
-  currentPhase.onButton();
+  if (loadStatus == 1)
+    currentPhase.onButton();
 }

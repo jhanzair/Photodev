@@ -52,17 +52,14 @@ class Phase {
   
   Phase end() {
     process.goToNextStep();
-    println("in"+process.getStep());
     switch(process.getStep()) {
       case 'c':
         return new Continuous (process.getStepTime(), process.getNextStep(), process);
       case 'i':
-        println("invertonce"+process.getStepTime());
         return new InvertOnce (process.getStepTime(), process.getNextStep(), process);
       case 'd':
         return new Drain (process.getStepTime(), process.getNextStep(), process);
       case 'w':
-        println("water");
         return new WaterChange (process.getStepTime(), process.getNextStep(), process);
       default:
         return null;
@@ -186,40 +183,38 @@ class Drain extends Phase {
   }
   
   void load() {
-    action = ' ';
     next = 'd';
     
     endTime = millis() + time*1000;
   }
   
   int getTime() {
-    
-    if (action == 'd')
-      return -1;
-    else {
-      int timeLeft = 0;
-      
+    if (timeLeft != -1) {
       timeLeft = int(endTime-millis())/1000;
       if (timeLeft < 0) timeLeft = 0;
-      
-      if (timeLeft == 0 && action != 'd') {
-        timeLeft = -1;
-        action = 'd';
-        next = nextStep;
-      }
-      
-      return timeLeft;
     }
+    
+    if (timeLeft == 0 && action != 'd') {
+      timeLeft = -1;
+      action = 'd';
+      next = nextStep;
+    }
+
+    return timeLeft;
   }
   
   void onButton() {
+    if (action == 'i')
+      action = ' ';
     if (timeLeft == -1)
       timeLeft = 0;
   }
   
   Phase end() {
-    process.goToNextPhase();
-    return super.end();
+    if (process.goToNextPhase() == 1)
+      return super.end();
+    else
+      return null;
   }
 }
 

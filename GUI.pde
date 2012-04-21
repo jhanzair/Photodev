@@ -91,42 +91,8 @@ void drawGUI() {
     
 }
 
-/* ---------------------------------OLD---------------------------------------- */
-void drawpgbars() { 
-  int stepsDone = step;
-  int totalSteps = 0;
-  float phasePercent[] = new float[nPhases+1];
-  
-  textAlign(RIGHT);
-  fill(225);
-  textFont(geo20, 20);
-  
-  for (int i = 0; i < nPhases; i++) {
-    totalSteps += phaseSteps[i];
-    text(phases[i], 780, 177+50*i);
-    if (stepsDone > phaseSteps[i]) {
-      phasePercent[i] = 1.1;
-      stepsDone -= phaseSteps[i];
-    } else if (stepsDone > 0) {
-      phasePercent[i] = float(stepsDone)/float(phaseSteps[i]);
-      stepsDone -= phaseSteps[i];
-    } else
-      phasePercent[i] = 0;
-  }
-  
-  phasePercent[nPhases] = float(step)/float(totalSteps);
-      
-  for (int i = 0; i < nPhases; i++)
-    drawBar(phasePercent[i], i);
-  
-  text("Total", 780, 177-60);  
-  drawBar(phasePercent[nPhases], -1.2);
-      
-  textAlign(LEFT);
-}
-
 /* ---------------------------------------------------------------------------- */
-void drawpgbars2() {
+void drawpgbars() {
   float[] processStatus = currentProcess.getProcessStatus();
   
   textAlign(RIGHT);
@@ -170,44 +136,16 @@ void drawBar(float phasePercent, float position) {
       image(pgbar100, 650, 120+50*position);
 }
 
-/* --------------------------------------OLD----------------------------------- */
+/* ---------------------------------------------------------------------------- */
 void drawTemp() {
   int tempBarPosition = 345;
   int tempBarSize = 250;
   float ratio = 0;
   int positionTriangle;
-  float tempMin = phaseTemp - tolerance;
-  float tempMax = phaseTemp + tolerance;
   
-  if (temperature > tempMax)
-    ratio = 1;
-  else if (temperature < tempMin)
-    ratio = 0;
-  else
-    ratio = (temperature - tempMin) / (tolerance*2);
-  
-  positionTriangle = tempBarPosition + int(ratio * tempBarSize);
-  
-  image(tempBar, 345, 480);
-  
-  fill(225);
-  textFont(geo30, 30);
-  text(nf(temperature, 2, 1) + " ºC", positionTriangle-50, 590);
-  textFont(geo28, 28);
-  text(nf(tempMin, 2, 1), 315, 468);
-  text(nf(phaseTemp, 2, 1), 448, 468);
-  text(nf(tempMax, 2, 1), 570, 468);
-  
-  noStroke();
-  triangle(positionTriangle, 530, positionTriangle-11, 552, positionTriangle+11, 552);
-}
-
-/* ---------------------------------------------------------------------------- */
-void drawTemp2() {
-  int tempBarPosition = 345;
-  int tempBarSize = 250;
-  float ratio = 0;
-  int positionTriangle;
+  if (currentProcess == null)
+    return;
+    
   float tempMin = currentProcess.getTemperature() - currentProcess.getTolerance();
   float tempMax = currentProcess.getTemperature() + currentProcess.getTolerance();
   
@@ -216,7 +154,7 @@ void drawTemp2() {
   else if (temperature < tempMin)
     ratio = 0;
   else
-    ratio = (temperature - tempMin) / (tolerance*2);
+    ratio = (temperature - tempMin) / (currentProcess.getTolerance()*2);
   
   positionTriangle = tempBarPosition + int(ratio * tempBarSize);
   
@@ -255,135 +193,7 @@ void newGUI() {
 }
 
 /* ---------------------------------------------------------------------------- */
-void mouseReleased() {
-  int pX = mouseX;
-  int pY = mouseY;
-  
-  if (pX > 10 && pX < 50 && pY > 5 && pY < 55) {
-    loadProcess();
-    drawGUI();
-    delay(1000);
-  }
-  
-  if (pX > 185 && pX < 235 && pY > 5 && pY < 55)
-    tempReaderSetup();
-    
-}
-
-/* ----------------------------------------OLD--------------------------------- */
 void drawText() {
-  String currentPhase;
-  String nextPhase;
-  String currentAction;
-  String nextAction = " ";
-  String timeLeft;
-  
-  
-  //Generate timeLeft string
-  int timeDiff = int(stepEnd/1000 - millis()/1000);
-  if (timeDiff <= 0)
-    timeLeft = " ";
-  else
-    timeLeft = timeDiff + " seconds to:";
-    
-  //Generate currentAction string
-  if (checkAlarm('c'))
-    currentAction = "Invert \ncontinuously";
-  else if (checkAlarm('i'))
-    currentAction = "Invert the\ntank once";
-  else if (checkAlarm('s'))
-    currentAction = "Setting up";
-  else if (checkAlarm('d'))
-    currentAction = "Drain the tank";
-  else if (checkAlarm('w'))
-    currentAction = "Change water";
-  else
-    currentAction = "Wait";
-  
-  
-  //Generate nextAction string
-  int nextStep = step + 1;
- 
-  if (step == 0 && checkAlarm('s'))
-    nextStep = 0;
-  if (timeData[step][1] > 1)
-    nextStep = step;
-  
-  if (!checkAlarm() || checkAlarm('i') || checkAlarm('d') || checkAlarm('w'))
-    switch (stepData[step]) {
-      case 'i':
-        nextAction = "Invert the\ntank once";
-        break;
-      case 'c':
-        nextAction = "Invert \ncontinuously";
-        break;
-      case 'd':
-        nextAction = "Drain the tank";
-        break;
-     }
-  else if (checkAlarm('c'))
-    switch (stepData[nextStep]) {
-      case 'w':
-        nextAction = "Change water";
-        break;
-      case 'd':
-        if (timeData[nextStep][0] == 0)
-          nextAction = "Drain the tank";
-        else
-          nextAction = "Wait";
-        break;
-      default:
-        nextAction = "Wait";
-    }
-  else
-    switch (stepData[nextStep]) {
-      case 'w':
-        nextAction = "Change water";
-        break;
-      case 'd':
-        if (timeData[nextStep][0] == 0)
-          nextAction = "Drain the tank";
-        else
-          nextAction = "Wait";
-        break;
-      case 'i':
-        nextAction = "Invert the\ntank once";
-        break;
-      case 'c':
-        nextAction = "Invert \ncontinuously";
-        break;
-      default:
-        nextAction = "Wait";
-    }
-    
- 
-  //Generate currentPhase string
-  if (phase == -1)
-    currentPhase = "Initial Setup";
-  else
-    currentPhase = phases[phase];
-  
-  //Generate nextPhase string
-  if (phase == -1 || checkAlarm('d'))
-    nextPhase = phases[phase+1];
-  else
-    nextPhase = phases[phase];
-  
-  //Upper text
-  fill(255);
-  textFont(geo32);
-  text(currentAction, x+20, textTop+100);
-  
-  
-  //Lower text
-  text(timeLeft, x+20, textTop + 250);
-  
-  fill(204);
-  text(nextAction, x+350, textTop+100);
-}
-
-/* ---------------------------------------------------------------------------- */
-void drawText2() {
   String currentAction;
   String nextAction = " ";
   String timeLeft;

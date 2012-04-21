@@ -4,6 +4,7 @@
 
 Serial myPort;
 int nSensors = -1;
+float temperature;
 float temperatures[];
 long lastRead = 0;
 

@@ -8,6 +8,7 @@ class Phase {
   char nextStep;
   char action;
   char next;
+  int pressed;
   Process process;
   
   Phase(Process process) {
@@ -15,6 +16,7 @@ class Phase {
     this.nextStep = process.getNextStep();
     this.action = 's';
     this.next = nextStep;
+    this.pressed = 0;
     this.process = process;
   }
   
@@ -23,6 +25,7 @@ class Phase {
     this.nextStep = next;
     this.action = ' ';
     this.next = ' ';
+    this.pressed = 0;
     this.process = process;
   }
   
@@ -41,20 +44,25 @@ class Phase {
   }
   
   int getTime() {
-    return -1;
+    if (pressed > 0)
+      return 0;
+    else
+      return -1;
   }
   
   Phase end() {
     process.goToNextStep();
-    
+    println("in"+process.getStep());
     switch(process.getStep()) {
       case 'c':
         return new Continuous (process.getStepTime(), process.getNextStep(), process);
       case 'i':
+        println("invertonce"+process.getStepTime());
         return new InvertOnce (process.getStepTime(), process.getNextStep(), process);
       case 'd':
         return new Drain (process.getStepTime(), process.getNextStep(), process);
       case 'w':
+        println("water");
         return new WaterChange (process.getStepTime(), process.getNextStep(), process);
       default:
         return null;
@@ -79,6 +87,7 @@ class Phase {
   }
   
   void onButton() {
+    pressed++;
     return;
   }
   
@@ -133,9 +142,13 @@ class InvertOnce extends Phase {
   
   
   void load() {
-    action = ' ';
-    next = 'i';
-    
+    if (action == 'i') {
+      action = 'i';
+      next = ' ';
+    } else {
+      action = ' ';
+      next = 'i';
+    }
     endTime = millis() + time*1000;
   }
   
@@ -154,6 +167,7 @@ class InvertOnce extends Phase {
   
   void onButton() {
     action = ' ';
+    next = 'i';
   }
   
 }

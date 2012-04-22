@@ -1,15 +1,14 @@
 /* TODO: Temperature Graph
 *        Action Symbols and animations
+*        OO conversion?
 */
 
-int textTop = 120;
-int x = 30;
-
 PFont geo20;
-PFont geo28;
+PFont geo24;
 PFont geo30;
 PFont geo32;
 PFont geo36;
+PFont geo64;
 
 PImage load;
 PImage loadOK;
@@ -37,10 +36,11 @@ void setupGUI() {
   smooth();
   
   geo20 = loadFont("Fonts/GeosansLight-20.vlw");
-  geo28 = loadFont("Fonts/GeosansLight-28.vlw");
+  geo24 = loadFont("Fonts/GeosansLight-24.vlw");
   geo30 = loadFont("Fonts/GeosansLight-30.vlw");
   geo32 = loadFont("Fonts/GeosansLight-32.vlw");
   geo36 = loadFont("Fonts/GeosansLight-36.vlw");
+  geo64 = loadFont("Fonts/GeosansLight-64.vlw");
   textFont(geo32, 32);
   
   //Load interfaces
@@ -165,10 +165,10 @@ void drawTemp() {
   fill(225);
   textFont(geo30, 30);
   text(nf(temperature, 2, 1) + " ºC", positionTriangle-50, 590);
-  textFont(geo28, 28);
-  text(nf(tempMin, 2, 1), 315, 468);
+  textFont(geo24, 24);
+  text(nf(tempMin, 2, 1), 325, 468);
   text(nf(currentProcess.getTemperature(), 2, 1), 448, 468);
-  text(nf(tempMax, 2, 1), 570, 468);
+  text(nf(tempMax, 2, 1), 575, 468);
   
   noStroke();
   triangle(positionTriangle, 530, positionTriangle-11, 552, positionTriangle+11, 552);
@@ -185,6 +185,9 @@ void drawTopBar() {
     image (tempOK, 185, 5);
   else
     image (temp, 185, 5);
+  
+  textFont(geo36);
+  text("Photodev Beta", 570, 40);
 }
 
 void newGUI() {
@@ -204,13 +207,13 @@ void drawText() {
   if (currentPhase.getTime() <= 0)
     timeLeft = " ";
   else
-    timeLeft = currentPhase.getTime() + " seconds";
+    timeLeft = currentPhase.getTime() + " s";
     
   //Generate currentAction string
   if (currentPhase.getAction() == 'c')
-    currentAction = "Invert \ncontinuously";
+    currentAction = "Invert continuously";
   else if (currentPhase.getAction() == 'i')
-    currentAction = "Invert the\ntank once";
+    currentAction = "Invert once";
   else if (currentPhase.getAction() == 's')
     currentAction = "Setting up";
   else if (currentPhase.getAction() == 'd')
@@ -222,9 +225,9 @@ void drawText() {
     
   //Generate nextAction string
   if (currentPhase.getNext() == 'c')
-    nextAction = "Invert \ncontinuously";
+    nextAction = "Invert continuously";
   else if (currentPhase.getNext() == 'i')
-    nextAction = "Invert the\ntank once";
+    nextAction = "Invert once";
   else if (currentPhase.getNext() == 's')
     nextAction = "Setting up";
   else if (currentPhase.getNext() == 'd')
@@ -233,15 +236,14 @@ void drawText() {
     nextAction = "Change water";
   else
     nextAction = "Wait";
-  
-  //Upper text
+
+  //Draw the actual text
   fill(255);
-  textFont(geo32);
-  text(currentAction, x+20, textTop+100);
-  
-  //Lower text
-  text(timeLeft, x+20, textTop + 250);
-  
-  fill(204);
-  text(nextAction, x+350, textTop+100);
+  textFont(geo24);
+  textAlign(CENTER);
+  text(currentAction, 168, 360);
+  text(nextAction, 506, 360);
+  textFont(geo64);
+  text(timeLeft, 350, 327);
+  textAlign(LEFT);
 }

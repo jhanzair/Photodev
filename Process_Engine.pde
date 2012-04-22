@@ -159,6 +159,7 @@ class InvertOnce extends Phase {
   }
   
   Phase end() {
+    beep();
     return super.end('i');
   }
   
@@ -198,6 +199,7 @@ class Drain extends Phase {
       timeLeft = -1;
       action = 'd';
       next = nextStep;
+      beep();
     }
 
     return timeLeft;

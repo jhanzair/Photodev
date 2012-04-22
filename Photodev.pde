@@ -2,13 +2,7 @@
  * PhotoDev 0.5
  * Photo development controller
  * 
- * *
-
-TODO:
-    !!Fazer som quando disparam alarmes!!
-
-Verificar se os códigos de step são válidos quando se está a ler o ficheiro logo
-*/
+ */
 
 import processing.serial.*;
 
@@ -26,13 +20,15 @@ void setup() {
   //This sets the whole background to black in the fullscreen version
   frame.setBackground(new java.awt.Color(0, 0, 0));
   
-  frameRate(4);
+  frameRate(5);
   
   //Initialize the GUI
   setupGUI();
   
   //Initialize the temperature sensors
   tempReaderSetup();
+  
+  audioSetup();
 }
 
 void draw() {
@@ -49,6 +45,7 @@ void draw() {
   }
   drawGUI();
   updateTemps();
+  processAudio();
 }
 
 /* ---------------------------------------------------------------------------- */

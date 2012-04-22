@@ -1,3 +1,6 @@
+/* TODO
+*  Verificar se os códigos de step são válidos quando se está a ler o ficheiro logo
+*/
 class Process {
   int validProcess;
   BufferedReader process;

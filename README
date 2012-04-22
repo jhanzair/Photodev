@@ -23,9 +23,16 @@ Changelog:
 
  0.4 21 April 2012
 	- Major rewrite of the whole code to implement a new object-oriented Process Engine (File_IO was 89% rewritten and Photodev was 81% rewritten :o)
-	- Kill a lot of bugs and introduced a bug where the progress bars don't update correctly. Will be corrected soon.
+	- Killed a lot of bugs and introduced a bug where the progress bars don't update correctly. Will be corrected soon.
 
  0.5 21 April 2012
 	- Solved a lot of bugs with the progress bars and the drain process action.
+ 
+0.6 22 April 2012
+	- Added sound alarms
+	- Cleaned up the code here and there
+	- GUI refinements (cleaner interface, changed font sizes and element proportions and positions here and there)
+	- The GUI elements that are in place are all acceptably good now
+	- The software is now quite usable, bumping to Beta
 
 jhanzair 2012

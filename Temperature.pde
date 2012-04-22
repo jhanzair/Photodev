@@ -1,5 +1,5 @@
 /**
- * 
+ * OO conversion?
  */
 
 Serial myPort;

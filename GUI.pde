@@ -1,14 +1,14 @@
-/* TODO: Action Symbols and animations
+/* TODO: Action  animations
 *        OO conversion?
 */
-
+//Fonts
 PFont geo20;
 PFont geo24;
 PFont geo30;
 PFont geo32;
 PFont geo36;
 PFont geo64;
-
+//UI elements
 PImage load;
 PImage loadOK;
 PImage temp;
@@ -16,7 +16,12 @@ PImage tempOK;
 PImage gui;
 PImage guiStart;
 PImage tempBar;
-
+PImage continuous;
+PImage invertOnce;
+PImage drain;
+PImage water;
+PImage wait;
+//Progress Bars
 PImage pgbar0;
 PImage pgbar10;
 PImage pgbar20;
@@ -29,7 +34,7 @@ PImage pgbar80;
 PImage pgbar90;
 PImage pgbar100;
 PImage pgbgreen;
-
+//Temperature Graph data
 float tempGraphDB[][]; //[][temperature, process temperature, tolerance]
 long nextGraphUpdate;
 
@@ -54,6 +59,11 @@ void setupGUI() {
   loadOK = loadImage("UI Elements/Load OK.png");
   temp = loadImage("UI Elements/Temperature.png");
   tempOK = loadImage("UI Elements/Temperature OK.png");
+  continuous = loadImage("UI Elements/continuous.png");
+  invertOnce = loadImage("UI Elements/invert once.png");
+  drain = loadImage("UI Elements/drain.png");
+  water = loadImage("UI Elements/water.png");
+  wait = loadImage("UI Elements/wait.png");
   
   //Load temperature interface
   tempBar = loadImage("UI Elements/Temperature Bar.png");
@@ -88,7 +98,7 @@ void drawGUI() {
   drawTopBar();
   
   if (loadStatus == 1) {
-    drawText();
+    drawActions();
     drawpgbars();
     drawTempGraph();
   } else {
@@ -209,7 +219,7 @@ void newGUI() {
 }
 
 /* ---------------------------------------------------------------------------- */
-void drawText() {
+void drawActions() {
   String currentAction;
   String nextAction = " ";
   String timeLeft;
@@ -257,6 +267,32 @@ void drawText() {
   textFont(geo64);
   text(timeLeft, 350, 327);
   textAlign(LEFT);
+  
+  //Draw the symbols
+  imageMode(CENTER);
+  drawSymbol(currentPhase.getAction(), 168, 231);
+  drawSymbol(currentPhase.getNext(), 503, 255);
+  imageMode(CORNER);
+}
+
+void drawSymbol(char symbol, int x, int y) {
+  switch(symbol) {
+    case 'c':
+      image(continuous, x, y);
+      break;
+    case 'i':
+      image(invertOnce, x, y);
+      break;
+    case 'd':
+      image(drain, x, y);
+      break;
+    case 'w':
+      image(water, x, y);
+      break;
+    case  ' ':
+      image(wait, x, y);
+      break;
+  }
 }
 
 void drawTempGraph() {

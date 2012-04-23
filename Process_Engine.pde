@@ -4,6 +4,7 @@
 
 /* ---------------------------------------------------------------------------- */
 class Phase {
+  PImage symbol;
   int time;
   char nextStep;
   char action;

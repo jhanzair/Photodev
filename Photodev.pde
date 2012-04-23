@@ -1,8 +1,7 @@
 /**
  * PhotoDev 0.5
  * Photo development controller
- * 
- */
+ **/
 
 import processing.serial.*;
 

@@ -1,5 +1,4 @@
-/* TODO: Temperature Graph
-*        Action Symbols and animations
+/* TODO: Action Symbols and animations
 *        OO conversion?
 */
 
@@ -30,6 +29,9 @@ PImage pgbar80;
 PImage pgbar90;
 PImage pgbar100;
 PImage pgbgreen;
+
+float tempGraphDB[][]; //[][temperature, process temperature, tolerance]
+long nextGraphUpdate;
 
 /* ---------------------------------------------------------------------------- */
 void setupGUI() {
@@ -69,26 +71,35 @@ void setupGUI() {
   pgbar90 = loadImage("UI Elements/Progress Bars/pb90.png");
   pgbar100 = loadImage("UI Elements/Progress Bars/pb100.png");
   pgbgreen = loadImage("UI Elements/Progress Bars/pbgreen.png");
+  
+  //Initialize the temperature graph database
+  tempGraphDB = new float[190][3];
+  for (int i = 0; i < 190; i++) {
+    tempGraphDB[i][0] = 0;
+    tempGraphDB[i][1] = 0;
+    tempGraphDB[i][2] = 0;
+  }
+    
 }
 
 /* ---------------------------------------------------------------------------- */
 void drawGUI() {
-  
   newGUI();
   drawTopBar();
   
   if (loadStatus == 1) {
     drawText();
     drawpgbars();
+    drawTempGraph();
   } else {
     fill(225);
     textFont(geo32, 32);
     text("Load a process to begin development", 143, height/2);
   }
 
-  if (temperatureStatus == 1)
+  if (temperatureStatus == 1) {
     drawTemp();
-    
+  }
 }
 
 /* ---------------------------------------------------------------------------- */
@@ -246,4 +257,47 @@ void drawText() {
   textFont(geo64);
   text(timeLeft, 350, 327);
   textAlign(LEFT);
+}
+
+void drawTempGraph() {
+    
+  //dimensions: 200/65, 30-230 / 470-535
+  int ty, tynext, maxy, maxynext, miny, minynext;
+  
+  //Update the database
+  if (millis() > nextGraphUpdate) {
+    nextGraphUpdate = millis() + 1000;
+    for (int i = 0; i < 189; i++) {
+      tempGraphDB[i][0] = tempGraphDB[i+1][0];
+      tempGraphDB[i][1] = tempGraphDB[i+1][1];
+      tempGraphDB[i][2] = tempGraphDB[i+1][2];
+    }
+    tempGraphDB[189][0] = temperature;
+    tempGraphDB[189][1] = currentProcess.getTemperature();
+    tempGraphDB[189][2] = currentProcess.getTolerance();
+  }
+  
+  //Draw the graph
+  stroke(225);
+  line(30, 535, 230, 535);
+  line(30, 535, 30, 470);
+  for (int i = 0; i < 189; i++) {
+    if (tempGraphDB[i][0] >= 15) {
+      ty = round(map(tempGraphDB[i][0], 15, 50, 0, 65));
+      maxy = round(map(tempGraphDB[i][1]+tempGraphDB[i][2], 15, 50, 0, 65));
+      miny = round(map(tempGraphDB[i][1]-tempGraphDB[i][2], 15, 50, 0, 65));
+      tynext = round(map(tempGraphDB[i+1][0], 15, 50, 0, 65));
+      maxynext = round(map(tempGraphDB[i+1][1]+tempGraphDB[i+1][2], 15, 50, 0, 65));
+      minynext = round(map(tempGraphDB[i+1][1]-tempGraphDB[i+1][2], 15, 50, 0, 65));
+      stroke(225);
+      //the whole maxy miny ty whatever mess is just so I can use line() instead of point() here
+      //this way, when there are jumps in temperature there aren't any discontinuities in the graph
+      line(i+30, 535-ty, i+31, 535-tynext);
+      stroke(color(#FF33AA));
+      line(i+30, 535-maxy, i+31, 535-maxynext);
+      line(i+30, 535-miny, i+31, 535-minynext);
+    }
+  }
+  noStroke();
+  
 }

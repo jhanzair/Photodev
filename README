@@ -28,8 +28,9 @@ Changelog:
  0.5 21 April 2012
 	- Solved a lot of bugs with the progress bars and the drain process action.
  
-0.6 22 April 2012
+0.6 23 April 2012
 	- Added sound alarms
+	- Added temperature graph
 	- Cleaned up the code here and there
 	- GUI refinements (cleaner interface, changed font sizes and element proportions and positions here and there)
 	- The GUI elements that are in place are all acceptably good now

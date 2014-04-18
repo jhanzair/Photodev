@@ -1,12 +1,18 @@
 /**
- * PhotoDev 0.5
+ * PhotoDev 0.7
  * Photo development controller
  **/
+ 
+ /*
+ TODOS:
+ Skip to next phase on button press
+ */
 
 import processing.serial.*;
 
 Phase currentPhase;
 Process currentProcess;
+String processPath;
 
 //State machine variables
 int loadStatus = 0;  // No process loaded - 0, load OK - 1, last loaded process finished - 2
@@ -25,7 +31,7 @@ void setup() {
   setupGUI();
   
   //Initialize the temperature sensors
-  tempReaderSetup();
+  hardwareSetup();
   
   audioSetup();
 }
@@ -43,7 +49,7 @@ void draw() {
     }
   }
   drawGUI();
-  updateTemps();
+  updateHW();
   processAudio();
 }
 
@@ -53,7 +59,12 @@ void mouseReleased() {
   int pY = mouseY;
   
   if (pX > 10 && pX < 50 && pY > 5 && pY < 55) {
-    currentProcess = new Process();
+    selectInput("Select a file to process:", "fileSelected");
+    while (processPath == null) {
+      delay(100);
+    }
+    println(processPath);
+    currentProcess = new Process(processPath);
     loadStatus = 1;
     currentPhase = new Phase(currentProcess);
     drawGUI();
@@ -61,7 +72,7 @@ void mouseReleased() {
   }
   
   if (pX > 185 && pX < 235 && pY > 5 && pY < 55)
-    tempReaderSetup();
+    hardwareSetup();
     
 }
 
@@ -69,3 +80,15 @@ void keyPressed() {
   if (loadStatus == 1)
     currentPhase.onButton();
 }
+
+  /*
+  Gets the selected file from the prompt and sets its path in
+   */
+  public void fileSelected(File selection) {
+    if (selection == null) {
+      println("Window was closed or the user hit cancel.");
+    } 
+    else {
+      processPath = selection.getAbsolutePath();
+    }
+  }

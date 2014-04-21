@@ -6,6 +6,7 @@
  /*
  TODOS:
  Skip to next phase on button press
+ ******Display next section when switching******
  */
 
 import processing.serial.*;

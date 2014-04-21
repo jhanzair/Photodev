@@ -1,0 +1,62 @@
+# C-41 development process, according to the C41 Digibase instructions
+# It’s faster than the normal C-41 process (Fuji instructions), but works just
+# fine with the Digibase chemicals I use.
+#
+# 3 m 15 sec of developer time (longer time should be used as chemicals are worn out)
+#
+# Doesn’t force wash procedure, simply calls for one rinsing - the user is trusted to do
+# it correctly!
+#
+# Phase
+# Temperature(ºC)   Temperature tolerance(ºC)
+# Time (s)	Action, number of repetitions
+#
+
+Pre-Wash
+39	3
+15	continuous, 1
+5	drain, 1
+
+Developer
+37.8	0.3
+15	continuous, 1
+30	invert, 5
+30	drain, 1
+
+Bleach
+38	3
+15	continuous, 1
+30	invert, 8
+30	drain, 1
+
+Wash
+38	5
+15	continuous, 1
+0	water change, 1
+0	drain, 1
+
+Fixer
+38	4
+30	invert, 11
+30	drain, 1
+
+Wash
+33	8
+15	continuous, 1
+0	water change, 1
+0	drain, 1
+
+Stabilizer
+33	8
+15	continuous, 1
+30	invert, 2
+10	drain, 1
+
+#
+#
+#
+# Actions: 	continuous - continuous inversions for x seconds
+#		invert - invert once after x seconds.
+#		water change - change the water in the tank (used in wash step only)
+#		drain - drain chemicals and end phase
+#		

@@ -75,8 +75,8 @@ void updateHW() {
     temperature = celsius1 + celsius2;
     temperature /= 2;
       
-    if (foot == 1 && currentPhase != null) {
-      currentPhase.pressed++;
+    if (foot >= 1 && currentPhase != null) {
+      currentPhase.onButton();
     }
 
     lastRead = millis();
